@@ -14,6 +14,7 @@ export const dataSourceConfig = (
   password: configService.get("PASSWORD_PG"),
   database: configService.get("DATABASE_PG"),
   entities: [CustomersEntity, CustomersAddressEntity],
+  migrations: ["dist/infra/database/typeorm/migrations/*.js"],
 });
 
 async function dataSourceOptions(): Promise<DataSourceOptions> {
