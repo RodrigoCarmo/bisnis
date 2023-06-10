@@ -1,4 +1,4 @@
-# Projeto Ecommerce Fictício - Aplicação Distribuída com Microsserviços
+# Bisnis - Ecommerce Fictício
 
 Este é um projeto para um ecommerce fictício de uma aplicação distribuída baseada na arquitetura de microsserviços 
 e na Clean Architecture. Será implementado um pequeno contexto de venda para um ecommerce, com cadastro de clientes, 
@@ -20,6 +20,7 @@ mas irá abordar boas práticas para uma boa comunicação entre as aplicações
 
 - Linguagem de programação: Node.js
 - Framework: Nest.js
+- Ferramentas extras: Docker
 - Banco de Dados: PostgresSql
 - Arquitetura: Arquitetura baseada em microsserviços e Clean Architecture
 
