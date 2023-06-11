@@ -6,10 +6,13 @@
             "port": 9229,
             "request": "attach",
             "name": "Launch Program",
+            "sourceMaps": true,
             "skipFiles": [
                 "<node_internals>/**"
             ],
-
+            "localRoot": "../src",
+            "remoteRoot": "/usr/apps/customers",
+ 
         }
     ]
 }
