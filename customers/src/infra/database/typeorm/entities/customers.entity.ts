@@ -25,8 +25,12 @@ export class CustomersEntity implements CustomersModel {
   @Column({ name: "last_name" })
   lastName: string;
 
-  @OneToOne(() => CustomersAddressEntity)
-  @JoinColumn()
+  @OneToOne(
+    () => CustomersAddressEntity,
+    (customersAddress: CustomersAddressEntity) => customersAddress.customer,
+    { nullable: true }
+  )
+  @JoinColumn({ name: "address_id" })
   addressId?: string;
 
   @Column()

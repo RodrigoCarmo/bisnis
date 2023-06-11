@@ -12,7 +12,9 @@ export class ClientService {
     @Inject("ENCRYPT_SERVICE")
     private readonly encryptService: EcryptInterface
   ) {}
-  async create(createClientDto: CreateCustomerDto): Promise<CustomersModel> {
+  async create(
+    createClientDto: CreateCustomerDto
+  ): Promise<Partial<CustomersModel>> {
     if (
       (await this.customersRepository.getCustomerByEmail(
         createClientDto.email

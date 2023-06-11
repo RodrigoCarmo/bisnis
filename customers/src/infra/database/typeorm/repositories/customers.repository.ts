@@ -5,6 +5,7 @@ import { CustomersEntity } from "src/infra/database/typeorm/entities/customers.e
 import { CustomersModel } from "src/domain/models/customers.model";
 import { Injectable } from "@nestjs/common";
 import { CustomersRepositoryInterface } from "src/domain/repositories/interfaces/customers-repository.interface";
+import { handleCustomerResponse } from "../presenters/customers.presenter";
 
 @Injectable()
 export class CustomersRepository implements CustomersRepositoryInterface {
@@ -12,10 +13,18 @@ export class CustomersRepository implements CustomersRepositoryInterface {
     @InjectRepository(CustomersEntity)
     private readonly customersRepository: BaseRepository<CustomersEntity>
   ) {}
-  async createCustomer(customers: CustomersModel): Promise<CustomersModel> {
-    return this.customersRepository.save(
-      this.customersRepository.create(customers)
-    );
+  async createCustomer(
+    customers: CustomersModel
+  ): Promise<Partial<CustomersModel>> {
+    const { raw: customer } = await this.customersRepository
+      .createQueryBuilder()
+      .insert()
+      .into("customers")
+      .values(customers)
+      .returning("*")
+      .execute();
+
+    return handleCustomerResponse(customer);
   }
   async getCustomerById(id: string): Promise<CustomersModel> {
     return this.customersRepository.findOneBy({ id });
