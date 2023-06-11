@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:14.1
+    container_name: customers_db
+    hostname: customers_db
+    restart: always
+    env_file:
+    - .env
+    volumes:
+      - pgdata:/var/lib/postgressql/data
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_HOST=${HOST_PG}
+      - POSTGRES_USER=${USERNAME_PG}
+      - POSTGRES_PASSWORD=${PASSWORD_PG}
+      - POSTGRES_DB=${DATABASE_PG}
+
+
+volumes:
+  pgdata:  
+
