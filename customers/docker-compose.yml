@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3'
 
 services:
   postgres:
@@ -19,16 +19,17 @@ services:
     networks:
       - customers
   nestjs:
-    # image: rodrigocarmo97/customers:1.0
     build:
-          context: .
-          dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile
     container_name: customers_api
     hostname: customers_api
     volumes:
       - .:/usr/apps/customers
+    command: npm run start:dev
     ports: 
       - '3001:3001'
+      - '9229:9229'
     depends_on:
       - postgres
     networks:
