@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { CreateClientDto } from "../dtos/client.dto";
 import { EcryptInterface } from "src/infra/external-services/interfaces/encrypt.interface";
 import { CustomersModel } from "src/domain/models/customers.model";
 import { CustomersRepositoryInterface } from "src/domain/repositories/interfaces/customers-repository.interface";
+import { CreateCustomerDto } from "../dtos/customer.dto";
 
 @Injectable()
 export class ClientService {
@@ -12,7 +12,7 @@ export class ClientService {
     @Inject("ENCRYPT_SERVICE")
     private readonly encryptService: EcryptInterface
   ) {}
-  async create(createClientDto: CreateClientDto): Promise<CustomersModel> {
+  async create(createClientDto: CreateCustomerDto): Promise<CustomersModel> {
     if (
       (await this.customersRepository.getCustomerByEmail(
         createClientDto.email
