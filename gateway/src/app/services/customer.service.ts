@@ -2,6 +2,7 @@ import { lastValueFrom } from "rxjs";
 import { CreateCustomerDto } from "../dtos/customer.dto";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CustomerHttpAdapter } from "src/infra/http/customer-http.adapter";
+import { httpException } from "src/infra/presenters/http-global-exception";
 
 @Injectable()
 export class CustomerService {
@@ -9,12 +10,13 @@ export class CustomerService {
 
   async create(createCustomerDto: CreateCustomerDto): Promise<any> {
     try {
-      const response = await lastValueFrom(
+      const { data } = await lastValueFrom(
         this.customerHttpAdapter.createCustomer(createCustomerDto)
       );
-      return response;
+
+      return data;
     } catch (error) {
-      throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      httpException(error);
     }
   }
 }
