@@ -1,4 +1,4 @@
-import { Controller, HttpCode, Post, UseFilters } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post, UseFilters } from "@nestjs/common";
 import { HttpExceptionFilter } from "src/utils/http-exception.filter";
 import { ClientService } from "../services/client.service";
 import { CreateCustomerDto } from "../dtos/customer.dto";
@@ -12,7 +12,7 @@ export class ClientController {
   @HttpCode(201)
   @UseFilters(new HttpExceptionFilter())
   async create(
-    createCustomerDto: CreateCustomerDto
+    @Body() createCustomerDto: CreateCustomerDto
   ): Promise<Partial<CustomersModel>> {
     return await this.clientService.create(createCustomerDto);
   }
