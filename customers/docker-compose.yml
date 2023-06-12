@@ -28,12 +28,13 @@ services:
       - .:/usr/apps/customers
     command: npm run start:dev
     ports: 
-      - '3001:3001'
+      - '9900:9900'
       - '9229:9229'
     depends_on:
       - postgres
     networks:
       - customers
+      - gateway
 
 volumes:
   pgdata:  
@@ -41,3 +42,7 @@ volumes:
 networks:
   customers:
     driver: bridge
+  gateway:
+    name: gateway_host
+    external: true
+    
