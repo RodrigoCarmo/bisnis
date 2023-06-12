@@ -26,14 +26,14 @@ export class CustomersRepository implements CustomersRepositoryInterface {
 
     return handleCustomerResponse(customer);
   }
-  async getCustomerById(id: string): Promise<CustomersModel> {
+  async getCustomerById(id: string): Promise<CustomersModel | undefined> {
     return this.customersRepository.findOneBy({ id });
   }
-  async getCustomerByEmail(email: string): Promise<CustomersModel> {
+  async getCustomerByEmail(email: string): Promise<CustomersModel | undefined> {
     return this.customersRepository.findOneBy({ email });
   }
 
-  async getCustomerByCpf(cpf: string): Promise<CustomersModel> {
+  async getCustomerByCpf(cpf: string): Promise<CustomersModel | undefined> {
     return this.customersRepository.findOneBy({ cpf });
   }
 
@@ -41,7 +41,9 @@ export class CustomersRepository implements CustomersRepositoryInterface {
     id: string,
     customers: CustomersModel
   ): Promise<Partial<CustomersModel>> {
-    const { raw: updatedCustomer } = await this.customersRepository
+    const {
+      raw: [updatedCustomer, ..._],
+    } = await this.customersRepository
       .createQueryBuilder()
       .update()
       .set(customers)
@@ -49,9 +51,21 @@ export class CustomersRepository implements CustomersRepositoryInterface {
       .returning(["first_name", "last_name", "phone"])
       .execute();
 
-    return updatedCustomer[0] as CustomersModel;
+    return updatedCustomer as CustomersModel;
   }
   async deleteCustomer(id: string): Promise<void> {
     await this.customersRepository.delete(id);
+  }
+  async checkCustomerAlreadyRegister(
+    email: string,
+    cpf: string
+  ): Promise<CustomersModel | undefined> {
+    const [customer, ..._] = await this.customersRepository
+      .createQueryBuilder("customer")
+      .select()
+      .where("customer.email = :email OR customer.cpf = :cpf", { email, cpf })
+      .execute();
+
+    return customer as CustomersModel;
   }
 }

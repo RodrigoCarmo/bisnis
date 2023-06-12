@@ -10,4 +10,8 @@ export interface CustomersRepositoryInterface {
     customer: CustomersModel
   ): Promise<Partial<CustomersModel>>;
   deleteCustomer(id: string): Promise<void>;
+  checkCustomerAlreadyRegister(
+    email: string,
+    cpf: string
+  ): Promise<CustomersModel | undefined>;
 }

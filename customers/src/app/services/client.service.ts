@@ -16,10 +16,10 @@ export class ClientService {
     createClientDto: CreateCustomerDto
   ): Promise<Partial<CustomersModel>> {
     if (
-      (await this.customersRepository.getCustomerByEmail(
-        createClientDto.email
-      )) ||
-      (await this.customersRepository.getCustomerByCpf(createClientDto.cpf))
+      await this.customersRepository.checkCustomerAlreadyRegister(
+        createClientDto.email,
+        createClientDto.cpf
+      )
     )
       throw new HttpException(
         "This client already exists for this, please check the cpf or email",
