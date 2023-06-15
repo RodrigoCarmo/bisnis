@@ -1,7 +1,19 @@
-import { Body, Controller, HttpCode, Post, UseFilters } from "@nestjs/common";
-import { HttpExceptionFilter } from "../utils/http-exception.filter";
-import { CreateCustomerDto } from "../dtos/customer.dto";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+} from "@nestjs/common";
+import {
+  CpfOrEmailDto,
+  CreateCustomerDto,
+  GetCustomerByIdDto,
+} from "../dtos/customer.dto";
 import { CustomerService } from "../services/customer.service";
+import { CustomerPresenter } from "../presenters/customer.presenter";
 
 @Controller("customers")
 export class CustomerController {
@@ -9,8 +21,25 @@ export class CustomerController {
 
   @Post()
   @HttpCode(201)
-  @UseFilters(new HttpExceptionFilter())
-  async create(@Body() createCustomerDto: CreateCustomerDto): Promise<any> {
+  async create(
+    @Body() createCustomerDto: CreateCustomerDto
+  ): Promise<CustomerPresenter> {
     return this.customerService.create(createCustomerDto);
+  }
+
+  @Get()
+  @HttpCode(200)
+  async getByCpfOrEmail(
+    @Query() cpfOrEmailDto: CpfOrEmailDto
+  ): Promise<CustomerPresenter> {
+    return this.customerService.getByCpfOrEmail(cpfOrEmailDto);
+  }
+
+  @Get(":id")
+  @HttpCode(200)
+  async getById(
+    @Param() getCustomerByIdDto: GetCustomerByIdDto
+  ): Promise<CustomerPresenter> {
+    return this.customerService.getById(getCustomerByIdDto);
   }
 }

@@ -5,6 +5,8 @@ import {
   MinLength,
   MaxLength,
   Validate,
+  IsUUID,
+  IsOptional,
 } from "class-validator";
 import { IsCpf } from "../utils/validators.utils";
 
@@ -35,4 +37,22 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   @Validate(IsCpf, { message: "cpf number is invalid" })
   cpf: string;
+}
+
+export class GetCustomerByIdDto {
+  @IsUUID()
+  id: string;
+}
+
+export class CpfOrEmailDto {
+  @IsString()
+  @MaxLength(11)
+  @MinLength(11)
+  @IsOptional()
+  @Validate(IsCpf, { message: "cpf number is invalid" })
+  cpf?: string;
+
+  @IsEmail()
+  @IsOptional()
+  email?: string;
 }

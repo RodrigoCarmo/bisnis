@@ -1,12 +1,25 @@
-import { Body, Controller, HttpCode, Post, UseFilters } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+  UseFilters,
+} from "@nestjs/common";
 import { HttpExceptionFilter } from "src/utils/http-exception.filter";
-import { ClientService } from "../services/client.service";
-import { CreateCustomerDto } from "../dtos/customer.dto";
+import { CustomersService } from "../services/client.service";
+import {
+  CpfOrEmailDto,
+  CreateCustomerDto,
+  GetCustomerByIdDto,
+} from "../dtos/customer.dto";
 import { CustomersModel } from "src/domain/models/customers.model";
 
 @Controller("customers")
 export class ClientController {
-  constructor(private readonly clientService: ClientService) {}
+  constructor(private readonly customersService: CustomersService) {}
 
   @Post()
   @HttpCode(201)
@@ -14,6 +27,23 @@ export class ClientController {
   async create(
     @Body() createCustomerDto: CreateCustomerDto
   ): Promise<Partial<CustomersModel>> {
-    return await this.clientService.create(createCustomerDto);
+    return await this.customersService.create(createCustomerDto);
+  }
+
+  @Get()
+  @HttpCode(200)
+  async getByCpfOrEmail(
+    @Query() cpfOrEmailDto: CpfOrEmailDto
+  ): Promise<Partial<CustomersModel>> {
+    return this.customersService.getByCpfOrEmail(cpfOrEmailDto);
+  }
+
+  @Get(":id")
+  @HttpCode(200)
+  @UseFilters(new HttpExceptionFilter())
+  async getById(
+    @Param() getCustomerByIdDto: GetCustomerByIdDto
+  ): Promise<Partial<CustomersModel>> {
+    return await this.customersService.getById(getCustomerByIdDto);
   }
 }
