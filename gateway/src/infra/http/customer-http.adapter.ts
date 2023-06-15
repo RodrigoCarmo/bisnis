@@ -1,7 +1,11 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { CreateCustomerDto } from "src/app/dtos/customer.dto";
+import {
+  CpfOrEmailDto,
+  CreateCustomerDto,
+  GetCustomerByIdDto,
+} from "src/app/dtos/customer.dto";
 
 @Injectable()
 export class CustomerHttpAdapter {
@@ -15,5 +19,34 @@ export class CustomerHttpAdapter {
 
   createCustomer(createCustomerDto: CreateCustomerDto) {
     return this.httpService.post(`${this.url}/customers`, createCustomerDto);
+  }
+
+  getCustomerById(getCustomerByIdDto: GetCustomerByIdDto) {
+    return this.httpService.get(
+      `${this.url}/customers/${getCustomerByIdDto.id}`
+    );
+  }
+
+  getByCpfOrEmail(cpfOrEmailDto: CpfOrEmailDto) {
+    const objQuery = {
+      queryName: "",
+      query: "",
+    };
+
+    if (cpfOrEmailDto.cpf) {
+      objQuery.queryName = `${Object.keys(cpfOrEmailDto).filter(
+        (key) => key === "cpf"
+      )}`;
+      objQuery.query = `${cpfOrEmailDto.cpf}`;
+    } else if (cpfOrEmailDto.email) {
+      objQuery.queryName = `${Object.keys(cpfOrEmailDto).filter(
+        (key) => key === "email"
+      )}`;
+      objQuery.query = `${cpfOrEmailDto.email}`;
+    }
+
+    return this.httpService.get(
+      `${this.url}/customers?${objQuery.queryName}=${objQuery.query}`
+    );
   }
 }

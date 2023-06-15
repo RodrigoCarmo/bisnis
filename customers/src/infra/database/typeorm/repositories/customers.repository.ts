@@ -1,6 +1,5 @@
 import { BaseRepository } from "src/infra/database/typeorm/repositories/base.repository";
 import { InjectRepository } from "@nestjs/typeorm";
-
 import { CustomersEntity } from "src/infra/database/typeorm/entities/customers.entity";
 import { CustomersModel } from "src/domain/models/customers.model";
 import { Injectable } from "@nestjs/common";
@@ -14,27 +13,44 @@ export class CustomersRepository implements CustomersRepositoryInterface {
     private readonly customersRepository: BaseRepository<CustomersEntity>
   ) {}
   async createCustomer(
-    customers: CustomersModel
+    customer: CustomersModel
   ): Promise<Partial<CustomersModel>> {
-    const { raw: customer } = await this.customersRepository
-      .createQueryBuilder()
-      .insert()
-      .into("customers")
-      .values(customers)
-      .returning("*")
-      .execute();
+    return handleCustomerResponse(
+      await this.customersRepository.save(
+        this.customersRepository.create(customer)
+      )
+    );
+  }
+  async getCustomerById(
+    id: string
+  ): Promise<Partial<CustomersModel> | undefined> {
+    return handleCustomerResponse(
+      await this.customersRepository
+        .createQueryBuilder("customer")
+        .where("customer.id = :id", { id })
+        .getOne()
+    );
+  }
+  async getCustomerByEmail(
+    email: string
+  ): Promise<Partial<CustomersModel> | undefined> {
+    return handleCustomerResponse(
+      await this.customersRepository
+        .createQueryBuilder("customer")
+        .where("customer.email = :email", { email })
+        .getOne()
+    );
+  }
 
-    return handleCustomerResponse(customer);
-  }
-  async getCustomerById(id: string): Promise<CustomersModel | undefined> {
-    return this.customersRepository.findOneBy({ id });
-  }
-  async getCustomerByEmail(email: string): Promise<CustomersModel | undefined> {
-    return this.customersRepository.findOneBy({ email });
-  }
-
-  async getCustomerByCpf(cpf: string): Promise<CustomersModel | undefined> {
-    return this.customersRepository.findOneBy({ cpf });
+  async getCustomerByCpf(
+    cpf: string
+  ): Promise<Partial<CustomersModel> | undefined> {
+    return handleCustomerResponse(
+      await this.customersRepository
+        .createQueryBuilder("customer")
+        .where("customer.cpf = :cpf", { cpf })
+        .getOne()
+    );
   }
 
   async updateCustomer(
@@ -60,12 +76,6 @@ export class CustomersRepository implements CustomersRepositoryInterface {
     email: string,
     cpf: string
   ): Promise<CustomersModel | undefined> {
-    const [customer, ..._] = await this.customersRepository
-      .createQueryBuilder("customer")
-      .select()
-      .where("customer.email = :email OR customer.cpf = :cpf", { email, cpf })
-      .execute();
-
-    return customer as CustomersModel;
+    return this.customersRepository.findOne({ where: [{ email }, { cpf }] });
   }
 }
