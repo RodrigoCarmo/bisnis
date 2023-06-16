@@ -1,16 +1,19 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
   Post,
+  Put,
   Query,
 } from "@nestjs/common";
 import {
   CpfOrEmailDto,
   CreateCustomerDto,
-  GetCustomerByIdDto,
+  CustomerIdDto,
+  UpdateCustomerDto,
 } from "../dtos/customer.dto";
 import { CustomerService } from "../services/customer.service";
 import { CustomerPresenter } from "../presenters/customer.presenter";
@@ -38,8 +41,23 @@ export class CustomerController {
   @Get(":id")
   @HttpCode(200)
   async getById(
-    @Param() getCustomerByIdDto: GetCustomerByIdDto
+    @Param() customerIdDto: CustomerIdDto
   ): Promise<CustomerPresenter> {
-    return this.customerService.getById(getCustomerByIdDto);
+    return this.customerService.getById(customerIdDto);
+  }
+
+  @Put(":id")
+  @HttpCode(200)
+  async update(
+    @Param() customerIdDto: CustomerIdDto,
+    @Body() updateCustomerDto: UpdateCustomerDto
+  ): Promise<CustomerPresenter> {
+    return this.customerService.update(customerIdDto, updateCustomerDto);
+  }
+
+  @Delete(":id")
+  @HttpCode(200)
+  async delete(@Param() customerIdDto: CustomerIdDto): Promise<void> {
+    return this.customerService.delete(customerIdDto);
   }
 }

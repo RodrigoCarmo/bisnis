@@ -4,7 +4,8 @@ import { ConfigService } from "@nestjs/config";
 import {
   CpfOrEmailDto,
   CreateCustomerDto,
-  GetCustomerByIdDto,
+  CustomerIdDto,
+  UpdateCustomerDto,
 } from "src/app/dtos/customer.dto";
 
 @Injectable()
@@ -21,10 +22,8 @@ export class CustomerHttpAdapter {
     return this.httpService.post(`${this.url}/customers`, createCustomerDto);
   }
 
-  getCustomerById(getCustomerByIdDto: GetCustomerByIdDto) {
-    return this.httpService.get(
-      `${this.url}/customers/${getCustomerByIdDto.id}`
-    );
+  getCustomerById(customerIdDto: CustomerIdDto) {
+    return this.httpService.get(`${this.url}/customers/${customerIdDto.id}`);
   }
 
   getByCpfOrEmail(cpfOrEmailDto: CpfOrEmailDto) {
@@ -48,5 +47,19 @@ export class CustomerHttpAdapter {
     return this.httpService.get(
       `${this.url}/customers?${objQuery.queryName}=${objQuery.query}`
     );
+  }
+
+  updateCustomer(
+    customerIdDto: CustomerIdDto,
+    updateCustomerDto: UpdateCustomerDto
+  ) {
+    return this.httpService.put(
+      `${this.url}/customers/${customerIdDto.id}`,
+      updateCustomerDto
+    );
+  }
+
+  deleteCustomer(customerIdDto: CustomerIdDto) {
+    return this.httpService.delete(`${this.url}/customers/${customerIdDto.id}`);
   }
 }

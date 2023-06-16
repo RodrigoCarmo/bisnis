@@ -6,7 +6,8 @@ import { CustomerPresenter } from "../presenters/customer.presenter";
 import {
   CpfOrEmailDto,
   CreateCustomerDto,
-  GetCustomerByIdDto,
+  CustomerIdDto,
+  UpdateCustomerDto,
 } from "../dtos/customer.dto";
 
 @Injectable()
@@ -27,12 +28,10 @@ export class CustomerService {
     }
   }
 
-  async getById(
-    getCustomerByIdDto: GetCustomerByIdDto
-  ): Promise<CustomerPresenter> {
+  async getById(customerIdDto: CustomerIdDto): Promise<CustomerPresenter> {
     try {
       const { data } = await lastValueFrom(
-        this.customerHttpAdapter.getCustomerById(getCustomerByIdDto)
+        this.customerHttpAdapter.getCustomerById(customerIdDto)
       );
 
       return data;
@@ -47,6 +46,36 @@ export class CustomerService {
     try {
       const { data } = await lastValueFrom(
         this.customerHttpAdapter.getByCpfOrEmail(cpfOrEmailDto)
+      );
+
+      return data;
+    } catch (error) {
+      httpException(error);
+    }
+  }
+
+  async update(
+    customerIdDto: CustomerIdDto,
+    updateCustomerDto: UpdateCustomerDto
+  ): Promise<CustomerPresenter> {
+    try {
+      const { data } = await lastValueFrom(
+        this.customerHttpAdapter.updateCustomer(
+          customerIdDto,
+          updateCustomerDto
+        )
+      );
+
+      return data;
+    } catch (error) {
+      httpException(error);
+    }
+  }
+
+  async delete(customerIdDto: CustomerIdDto): Promise<void> {
+    try {
+      const { data } = await lastValueFrom(
+        this.customerHttpAdapter.deleteCustomer(customerIdDto)
       );
 
       return data;

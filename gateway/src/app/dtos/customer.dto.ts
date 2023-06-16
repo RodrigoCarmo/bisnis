@@ -39,7 +39,7 @@ export class CreateCustomerDto {
   cpf: string;
 }
 
-export class GetCustomerByIdDto {
+export class CustomerIdDto {
   @IsUUID()
   id: string;
 }
@@ -55,4 +55,27 @@ export class CpfOrEmailDto {
   @IsEmail()
   @IsOptional()
   email?: string;
+}
+
+export class UpdateCustomerDto {
+  @IsEmail()
+  @IsOptional()
+  email: string;
+
+  @IsString()
+  @IsOptional()
+  firstName: string;
+
+  @IsString()
+  @IsOptional()
+  lastName: string;
+
+  @IsString()
+  @IsOptional()
+  phone: string;
+
+  @IsString()
+  @MinLength(8)
+  @IsOptional()
+  password: string;
 }
