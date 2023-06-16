@@ -6,5 +6,5 @@ export interface CustomersModel {
   addressId?: string;
   phone: string;
   password: string;
-  cpf: string;
+  cpf?: string;
 }

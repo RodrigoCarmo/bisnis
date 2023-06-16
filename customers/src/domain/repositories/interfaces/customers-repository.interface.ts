@@ -1,3 +1,4 @@
+import { UpdateCustomerDto } from "src/app/dtos/customer.dto";
 import { CustomersModel } from "src/domain/models/customers.model";
 
 export interface CustomersRepositoryInterface {
@@ -9,7 +10,7 @@ export interface CustomersRepositoryInterface {
   getCustomerByCpf(cpf: string): Promise<Partial<CustomersModel> | undefined>;
   updateCustomer(
     id: string,
-    customer: CustomersModel
+    customer: UpdateCustomerDto
   ): Promise<Partial<CustomersModel>>;
   deleteCustomer(id: string): Promise<void>;
   checkCustomerAlreadyRegister(

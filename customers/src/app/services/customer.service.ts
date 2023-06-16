@@ -5,7 +5,8 @@ import { CustomersRepositoryInterface } from "src/domain/repositories/interfaces
 import {
   CpfOrEmailDto,
   CreateCustomerDto,
-  GetCustomerByIdDto,
+  CustomerIdDto,
+  UpdateCustomerDto,
 } from "../dtos/customer.dto";
 
 @Injectable()
@@ -26,7 +27,7 @@ export class CustomersService {
       )
     )
       throw new HttpException(
-        "This client already exists for this, please check the cpf or email",
+        "This customer already exists with this cpf or email",
         HttpStatus.CONFLICT
       );
     createClientDto.password = await this.encryptService.encryptPassword(
@@ -36,10 +37,10 @@ export class CustomersService {
   }
 
   async getById(
-    getCustomerByIdDto: GetCustomerByIdDto
+    customerIdDto: CustomerIdDto
   ): Promise<Partial<CustomersModel>> {
     const customer = await this.customersRepository.getCustomerById(
-      getCustomerByIdDto.id
+      customerIdDto.id
     );
 
     if (!customer)
@@ -65,5 +66,40 @@ export class CustomersService {
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  async update(
+    customerIdDto: CustomerIdDto,
+    updateCustomerDto: UpdateCustomerDto
+  ): Promise<Partial<CustomersModel>> {
+    try {
+      if (updateCustomerDto.password) {
+        updateCustomerDto.password = await this.encryptService.encryptPassword(
+          updateCustomerDto.password
+        );
+      }
+
+      if (updateCustomerDto.email) {
+        const email = await this.customersRepository.getCustomerByEmail(
+          updateCustomerDto.email
+        );
+
+        if (email)
+          throw new HttpException(
+            "This email already in used",
+            HttpStatus.CONFLICT
+          );
+      }
+      return this.customersRepository.updateCustomer(
+        customerIdDto.id,
+        updateCustomerDto
+      );
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async delete(customerIdDto: CustomerIdDto): Promise<void> {
+    return this.customersRepository.deleteCustomer(customerIdDto.id);
   }
 }

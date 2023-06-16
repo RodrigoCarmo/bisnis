@@ -7,7 +7,7 @@ export type CreateCustomerDto = {
   cpf: string;
 };
 
-export type GetCustomerByIdDto = {
+export type CustomerIdDto = {
   id: string;
 };
 
@@ -15,3 +15,11 @@ export class CpfOrEmailDto {
   cpf?: string;
   email?: string;
 }
+
+export type UpdateCustomerDto = {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  password?: string;
+};

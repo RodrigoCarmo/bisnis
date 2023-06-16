@@ -5,6 +5,7 @@ import { CustomersModel } from "src/domain/models/customers.model";
 import { Injectable } from "@nestjs/common";
 import { CustomersRepositoryInterface } from "src/domain/repositories/interfaces/customers-repository.interface";
 import { handleCustomerResponse } from "../presenters/customers.presenter";
+import { UpdateCustomerDto } from "src/app/dtos/customer.dto";
 
 @Injectable()
 export class CustomersRepository implements CustomersRepositoryInterface {
@@ -57,17 +58,16 @@ export class CustomersRepository implements CustomersRepositoryInterface {
     id: string,
     customers: CustomersModel
   ): Promise<Partial<CustomersModel>> {
-    const {
-      raw: [updatedCustomer, ..._],
-    } = await this.customersRepository
+    const customerToUpdate = customers as UpdateCustomerDto;
+    const { raw: updatedCustomer } = await this.customersRepository
       .createQueryBuilder()
       .update()
-      .set(customers)
+      .set(customerToUpdate)
       .where("id = :id", { id })
-      .returning(["first_name", "last_name", "phone"])
+      .returning("*")
       .execute();
 
-    return updatedCustomer as CustomersModel;
+    return handleCustomerResponse(updatedCustomer);
   }
   async deleteCustomer(id: string): Promise<void> {
     await this.customersRepository.delete(id);

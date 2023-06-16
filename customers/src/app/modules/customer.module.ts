@@ -5,7 +5,7 @@ import { ClientController } from "../controllers/customer.controller";
 import { Bcrypt } from "src/infra/external-services/bcrypt";
 import { CustomersEntity } from "src/infra/database/typeorm/entities/customers.entity";
 import { CustomersRepository } from "src/infra/database/typeorm/repositories/customers.repository";
-import { CustomersService } from "../services/client.service";
+import { CustomersService } from "../services/customer.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([CustomersEntity])],

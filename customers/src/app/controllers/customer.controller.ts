@@ -1,19 +1,22 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
   Post,
+  Put,
   Query,
   UseFilters,
 } from "@nestjs/common";
 import { HttpExceptionFilter } from "src/utils/http-exception.filter";
-import { CustomersService } from "../services/client.service";
+import { CustomersService } from "../services/customer.service";
 import {
   CpfOrEmailDto,
   CreateCustomerDto,
-  GetCustomerByIdDto,
+  CustomerIdDto,
+  UpdateCustomerDto,
 } from "../dtos/customer.dto";
 import { CustomersModel } from "src/domain/models/customers.model";
 
@@ -42,8 +45,25 @@ export class ClientController {
   @HttpCode(200)
   @UseFilters(new HttpExceptionFilter())
   async getById(
-    @Param() getCustomerByIdDto: GetCustomerByIdDto
+    @Param() customerIdDto: CustomerIdDto
   ): Promise<Partial<CustomersModel>> {
-    return await this.customersService.getById(getCustomerByIdDto);
+    return await this.customersService.getById(customerIdDto);
+  }
+
+  @Put(":id")
+  @HttpCode(200)
+  @UseFilters(new HttpExceptionFilter())
+  async update(
+    @Param() customerIdDto: CustomerIdDto,
+    @Body() updateCustomerDto: UpdateCustomerDto
+  ): Promise<Partial<CustomersModel>> {
+    return await this.customersService.update(customerIdDto, updateCustomerDto);
+  }
+
+  @Delete(":id")
+  @HttpCode(200)
+  @UseFilters(new HttpExceptionFilter())
+  async delete(@Param() customerIdDto: CustomerIdDto): Promise<void> {
+    return await this.customersService.delete(customerIdDto);
   }
 }
