@@ -19,11 +19,15 @@ export class CustomerHttpAdapter {
   }
 
   createCustomer(createCustomerDto: CreateCustomerDto) {
-    return this.httpService.post(`${this.url}/customers`, createCustomerDto);
+    return this.httpService.post(`${this.url}/customers`, createCustomerDto, {
+      timeout: this.configService.get("CUSTOMER_TIMEOUT"),
+    });
   }
 
   getCustomerById(customerIdDto: CustomerIdDto) {
-    return this.httpService.get(`${this.url}/customers/${customerIdDto.id}`);
+    return this.httpService.get(`${this.url}/customers/${customerIdDto.id}`, {
+      timeout: this.configService.get("CUSTOMER_TIMEOUT"),
+    });
   }
 
   getByCpfOrEmail(cpfOrEmailDto: CpfOrEmailDto) {
@@ -45,7 +49,10 @@ export class CustomerHttpAdapter {
     }
 
     return this.httpService.get(
-      `${this.url}/customers?${objQuery.queryName}=${objQuery.query}`
+      `${this.url}/customers?${objQuery.queryName}=${objQuery.query}`,
+      {
+        timeout: this.configService.get("CUSTOMER_TIMEOUT"),
+      }
     );
   }
 
@@ -60,6 +67,11 @@ export class CustomerHttpAdapter {
   }
 
   deleteCustomer(customerIdDto: CustomerIdDto) {
-    return this.httpService.delete(`${this.url}/customers/${customerIdDto.id}`);
+    return this.httpService.delete(
+      `${this.url}/customers/${customerIdDto.id}`,
+      {
+        timeout: this.configService.get("CUSTOMER_TIMEOUT"),
+      }
+    );
   }
 }
