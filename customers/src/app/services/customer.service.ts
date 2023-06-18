@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { EcryptInterface } from "src/infra/external-services/interfaces/encrypt.interface";
 import { CustomersModel } from "src/domain/models/customers.model";
 import { CustomersRepositoryInterface } from "src/domain/repositories/interfaces/customers-repository.interface";
 import {
@@ -8,6 +7,7 @@ import {
   CustomerIdDto,
   UpdateCustomerDto,
 } from "../dtos/customer.dto";
+import { EncryptInterface } from "src/infra/external-services/interfaces/encrypt.interface";
 
 @Injectable()
 export class CustomersService {
@@ -15,7 +15,7 @@ export class CustomersService {
     @Inject("CLIENT_REPOSITORY")
     private customersRepository: CustomersRepositoryInterface,
     @Inject("ENCRYPT_SERVICE")
-    private readonly encryptService: EcryptInterface
+    private readonly encryptService: EncryptInterface
   ) {}
   async create(
     createClientDto: CreateCustomerDto
