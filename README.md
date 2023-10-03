@@ -24,6 +24,6 @@ mas irá abordar boas práticas para uma boa comunicação entre as aplicações
 - Banco de Dados: PostgresSql
 - Arquitetura: Arquitetura baseada em microsserviços e Clean Architecture
 
-## Design system atual
+## System Design
 
 ![design-system](public/design-system-bisnis.png)
